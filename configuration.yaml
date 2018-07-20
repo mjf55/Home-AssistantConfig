@@ -1,0 +1,221 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret loc_latitude
+  longitude: !secret loc_longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 433
+  # metric for Metric, imperial for Imperial
+  unit_system: imperial
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/New_York
+  # Customization file
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+# introduction:
+
+# Enables the frontend
+frontend:
+
+cloud:
+# Enables configuration UI
+config:
+
+http:
+  # Secrets are defined in the file secrets.yaml
+  api_password: !secret http_password
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+  # base_url: example.duckdns.org:8123
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Example configuration.yaml entry with exclude
+recorder:
+  purge_keep_days: 5
+  db_url: sqlite:////home/homeassistant/.homeassistant/homeassistant_v2.db
+  exclude:
+    domains:
+      - automation
+      - weblink
+      - updater
+    entities:
+      - sun.sun # Don't record sun data
+      - sensor.last_boot # Comes from 'systemmonitor' sensor platform
+      - sensor.date
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+# Sensor, weather, 3D Printer, 
+binary_sensor:
+  - platform: octoprint
+    monitored_conditions:
+      - Printing
+      - Printing Error
+
+sensor:
+  - platform: darksky
+    api_key: !secret darksky_api
+    forcast:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    monitored_conditions:
+      - summary
+      - icon
+      - nearest_storm_distance
+      - nearest_storm_bearing
+      - precip_type
+      - precip_intensity
+      - precip_probability
+      - temperature
+      - apparent_temperature
+      - dew_point
+      - wind_speed
+      - wind_bearing
+      - cloud_cover
+      - humidity
+      - pressure
+      - visibility
+      - ozone
+      - minutely_summary
+      - hourly_summary
+      - daily_summary
+      - temperature_max
+      - temperature_min
+      - apparent_temperature_max
+      - apparent_temperature_min
+      - precip_intensity_max
+    update_interval:
+      minutes: 5
+
+  - platform: time_date
+    display_options:
+      - 'time'
+  - platform: template
+    sensors:
+      mark_status:
+        value_template: '{{ states.device_tracker.galaxys7.state }}'
+        friendly_name: 'Mark'
+      patty_status:
+        value_template: '{{ states.device_tracker.galaxys9.state }}'
+        friendly_name: 'Patty'
+  - platform: octoprint
+    name: OctoPrint
+    monitored_conditions:
+      - Current State
+      - Temperatures
+      - Job Percentage
+      
+  - platform: transmission
+    host: 192.168.1.73
+    monitored_variables:
+      - current_status
+      - download_speed
+      - upload_speed
+      - active_torrents
+      - paused_torrents
+      - total_torrents
+
+
+# Text to speech
+tts:
+  - platform: google
+
+# Cloud
+cloud:
+
+
+mqtt:
+  broker: ha-pi
+  port: 1883
+  client_id: home-assistant
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+
+device_tracker:
+  platform: nmap_tracker
+  hosts: 192.168.1.66-67
+  home_interval: 10
+
+switch:
+  - platform: mqtt
+    name: "Family Room Light"
+    command_topic: "cmnd/FamRoomLight/power"
+    state_topic: "stat/FamRoomLight/POWER"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+  - platform: mqtt
+    name: "Sonoff Extension Cord"
+    command_topic: "cmnd/sonoff_extension_cord/power"
+    state_topic: "stat/sonoff_extension_cord/POWER"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+    
+octoprint:
+  host: 192.168.1.75:5000
+  api_key: !secret octoprint_api
+  bed: true
+  number_of_tools: 1
+ 
+weblink:
+  entities:
+    - name: OctoPi Home
+      url: http://octopi:5000
+
+# Example configuration.yaml entry
+input_boolean:
+  alarm_home:
+    name: Alarm the home
+    initial: off
+    icon: mdi:home-lock-open
+
+panel_iframe:
+  tasmoadmin:
+    title: TasmoAdmin
+    icon: mdi:lightbulb-on
+    url: http://ha-pi
+    
+    
+camera:
+  - platform: generic
+    still_image_url: https://radblast.wunderground.com/cgi-bin/radar/WUNIDS_map?station=RAX&brand=wui&num=1&delay=15&type=N0R&frame=0&scale=1.000&noclutter=0&showstorms=0&mapx=400&mapy=240&centerx=400&centery=240&transx=0&transy=0&showlabels=1&severe=0&rainsnow=0&lightning=0&smooth=0&rand=25525252&lat=0&lon=0&label=you
+    name: Radar Raleigh Current
+  - platform: generic
+    still_image_url: https://radblast.wunderground.com/cgi-bin/radar/WUNIDS_map?station=AKQ&brand=wui&num=1&delay=15&type=N0R&frame=0&scale=1.000&noclutter=0&showstorms=0&mapx=400&mapy=240&centerx=400&centery=240&transx=0&transy=0&showlabels=1&severe=0&rainsnow=0&lightning=0&smooth=0&rand=25525250&lat=0&lon=0&label=you
+    name: Radar Norfolk Current
+    
+    
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml

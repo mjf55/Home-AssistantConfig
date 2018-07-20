@@ -1,0 +1,112 @@
+#### Views
+family_room_view:
+  view: yes
+  name: Family Room
+  entities:
+  - group.family_room
+
+master_bedroom_view:
+  view: yes
+  name: Master Bed Room
+  entities:
+  - group.family_room
+  - media_player.fire_tv_stick
+
+
+
+printer_view:
+  name: 3D Printer
+  icon: mdi:printer
+  view: yes
+  entities:
+    - group.printer_status
+
+
+
+
+
+
+
+
+
+###### Groups
+people_status:
+  name: People Status
+  entities:
+    - sensor.mark_status
+    - sensor.patty_status
+
+family_room:
+  name: Family Room
+  entities:
+  - switch.family_room_light
+  
+floating:
+  name: Floating things
+  entities:
+  - switch.sonoff_extension_cord
+  
+
+environment:
+  name: Weather and Time
+  entities:
+   - sensor.time  
+   - sun.sun
+   - sensor.dark_sky_summary
+   - sensor.dark_sky_icon
+   - sensor.dark_sky_nearest_storm_distance
+   - sensor.dark_sky_nearest_storm_bearing
+   - sensor.dark_sky_precip
+   - sensor.dark_sky_daily_max_precip_intensity
+   - sensor.dark_sky_precip_probability
+   - sensor.dark_sky_temperature
+   - sensor.dark_sky_apparent_temperature
+   - sensor.dark_sky_dew_point
+   - sensor.dark_sky_wind_speed
+   - sensor.dark_sky_wind_bearing
+   - sensor.dark_sky_cloud_coverage
+   - sensor.dark_sky_humidity
+   - sensor.dark_sky_pressure
+   - sensor.dark_sky_visibility
+   - sensor.dark_sky_ozone
+   - sensor.dark_sky_minutely_summary
+   - sensor.dark_sky_hourly_summary
+   - sensor.dark_sky_daily_summary
+   - sensor.dark_sky_daily_high_temperature
+   - sensor.dark_sky_daily_low_temperature
+   - sensor.dark_sky_daily_high_apparent_temperature
+   - sensor.dark_sky_daily_low_apparent_temperature
+   - sensor.dark_sky_precip_intensity
+#  - sensor.weather_symbol
+#  - sensor.weather_temperature
+#  - sensor.weather_precipitation
+#  - sensor.weather_humidity
+  
+printer_status:
+  name: Ying Status
+  entities:
+    - binary_sensor.octoprint_printing
+    - binary_sensor.octoprint_printing_error
+    - sensor.octoprint_current_state
+    - sensor.octoprint_job_percentage
+    - sensor.octoprint_actual_bed_temp
+    - sensor.octoprint_target_bed_temp
+    - sensor.octoprint_actual_tool0_temp
+    - sensor.octoprint_target_tool0_temp
+    - weblink.octopi_home
+    
+transmission_status:
+  name: Transmission
+  entities:
+    - sensor.transmission_up_speed 
+    - sensor.transmission_total_torrents
+    - sensor.transmission_active_torrents
+    - sensor.transmission_paused_torrents
+    - sensor.transmission_down_speed
+    - sensor.transmission_up_speed
+    - sensor.transmission_status
+    
+alarm_status:
+  name: Alarms
+  entities:
+    - input_boolean.alarm_home

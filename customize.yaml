@@ -1,0 +1,31 @@
+sensor.mark_status:
+  entity_picture: /local/MeInMyMoonSuit.jpg
+sensor.patty_status:
+  entity_picture: /local/patty.jpg
+
+switch.extension_cord:
+  friendly_name: Sonoff Extension Cord
+  icon: mdi:power-plug
+  
+switch.family_room_light:
+  friendly_name: Family Room Light
+  icon: mdi:lamp
+  
+# OCTOPRINT
+binary_sensor.octoprint_printing:
+  friendly_name: Printing?
+binary_sensor.octoprint_printing_error:
+  friendly_name: Error Reported?
+sensor.octoprint_actual_bed_temp:
+  friendly_name: Bed Temp
+sensor.octoprint_actual_tool0_temp:
+  friendly_name: Hotend Temp
+sensor.octoprint_current_state:
+  friendly_name: Currently
+sensor.octoprint_job_percentage:
+  friendly_name: Complete
+sensor.octoprint_target_bed_temp:
+  friendly_name: Target Bed Temp
+sensor.octoprint_target_tool0_temp:
+  friendly_name: Target Hotend Temp
+
