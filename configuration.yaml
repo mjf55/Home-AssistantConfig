@@ -148,10 +148,6 @@ sensor:
 tts:
   - platform: google
 
-# Cloud
-cloud:
-
-
 mqtt:
   broker: ha-pi
   port: 1883
