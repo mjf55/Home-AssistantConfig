@@ -1,8 +1,8 @@
 media_player.fire_tv_stick:
   name:
   platform: plex
-  unique_id: dec37263a2a61c93-com-plexapp-android
+  unique_id: !secret firestick_id
 media_player.chrome:
   name:
   platform: plex
-  unique_id: rdj3e8d71gs3jtt9
+  unique_id: !secret plex_id
