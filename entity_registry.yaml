@@ -1,8 +1,8 @@
 media_player.fire_tv_stick:
-  name:
-  platform: plex
+  name: "Fire TV Stick"
+  platform: firetv
   unique_id: !secret firestick_id
 media_player.chrome:
-  name:
+  name: "Plex Server"
   platform: plex
   unique_id: !secret plex_id
