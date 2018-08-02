@@ -52,11 +52,47 @@
     - service: homeassistant.turn_on
       entity_id: switch.family_room_light
 
+- alias: 'Good Night2'
+  trigger:
+    platform: time
+    at: '01:00'
+  action:
+    - delay: '00:{{ (range(1, 20)|random|int) }}:00'
+    - service: homeassistant.turn_off
+      entity_id: switch.sonoff_extension_cord
 
+- alias: 'Light on at sunset2'
+  trigger:
+    platform: sun
+    event: sunset
+    offset: "-01:40:00"
+  action:
+    - delay: '00:{{ (range(10, 45)|random|int) }}:00'
+    - service: homeassistant.turn_on
+      entity_id: switch.sonoff_extension_cord
 
+- alias: Turn on light when there is movement
+  trigger:
+    platform: state
+    entity_id: sensor.sn1_pir
+    to: 'motion detected'
+  action:
+    - service: homeassistant.turn_on
+      entity_id: light.sn1_led
+    - service: homeassistant.turn_on
+      entity_id: switch.family_room_light
 
-
-
+- alias: Turn off light when movement stopped
+  trigger:
+    platform: state
+    entity_id: sensor.sn1_pir
+    to: 'standby'
+  action:
+    - delay: '00:01:00'
+    - service: homeassistant.turn_off
+      entity_id: light.sn1_led
+    - service: homeassistant.turn_off
+      entity_id: switch.family_room_light
 
 
 

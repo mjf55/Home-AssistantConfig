@@ -78,6 +78,11 @@ binary_sensor:
       - Printing Error
 
 sensor:
+  - platform: command_line
+    name: "CPU Temp"
+    command: "cat /sys/class/thermal/thermal_zone0/temp | awk '{print ($1*.001)}'"
+    unit_of_measurement: "C"
+    
   - platform: darksky
     api_key: !secret darksky_api
     forcast:
@@ -143,7 +148,49 @@ sensor:
       - paused_torrents
       - total_torrents
 
+      
+  - platform: mqtt  
+    state_topic: "multisensor/sensornode1"  
+    name: "SN1 Humidity"  
+    unit_of_measurement: "%"  
+    value_template: '{{ value_json.humidity | round(1) }}'  
+  
+  - platform: mqtt  
+    state_topic: "multisensor/sensornode1"  
+    name: "SN1 LDR"
+    ##This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
+    unit_of_measurement: "LUX"  
+    value_template: '{{ value_json.ldr }}'  
+  
+  - platform: mqtt  
+    state_topic: "multisensor/sensornode1"  
+    name: "SN1 PIR"  
+    value_template: '{{ value_json.motion }}'  
+  
+  - platform: mqtt  
+    state_topic: "multisensor/sensornode1"  
+    name: "SN1 Temperature"  
+    unit_of_measurement: "°F"  
+    value_template: '{{ value_json.temperature | round(1) }}'  
 
+  - platform: mqtt
+    state_topic: "multisensor/sensornode1"
+    name: "SN1 Real Feel"
+    unit_of_measurement: "°F"
+    value_template: '{{ value_json.heatIndex | round(1) }}'
+
+light:  
+  - platform: mqtt_json  
+    name: "SN1 LED"  
+    state_topic: "multisensor/sensornode1"  
+    command_topic: "multisensor/sensornode1/set"  
+    brightness: true  
+    flash: true  
+    rgb: true  
+    optimistic: false  
+    qos: 0  
+    
+    
 # Text to speech
 tts:
   - platform: google
