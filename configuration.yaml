@@ -236,7 +236,6 @@ weblink:
     - name: OctoPi Home
       url: http://octopi:5000
 
-# Example configuration.yaml entry
 input_boolean:
   alarm_home:
     name: Alarm the home

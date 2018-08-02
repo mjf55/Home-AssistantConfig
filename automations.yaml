@@ -52,7 +52,7 @@
     - service: homeassistant.turn_on
       entity_id: switch.family_room_light
 
-- alias: 'Good Night2'
+- alias: 'Turn off extension cord'
   trigger:
     platform: time
     at: '01:00'
