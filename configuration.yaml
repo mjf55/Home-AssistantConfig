@@ -18,6 +18,7 @@ homeassistant:
 
 # Enables the frontend
 frontend:
+  javascript_version: latest
 
 cloud:
 # Enables configuration UI
@@ -71,6 +72,7 @@ map:
 sun:
 
 # Sensor, weather, 3D Printer, 
+
 binary_sensor:
   - platform: octoprint
     monitored_conditions:
@@ -78,6 +80,21 @@ binary_sensor:
       - Printing Error
 
 sensor:
+  - platform: template
+    sensors:
+      day_night:
+        friendly_name: 'Time of Day'
+        value_template: >
+          {% if now().hour >= 18 and now().hour < 24 %}
+          Evening
+          {% elif now().hour >= 0 and now().hour < 2 %}
+          Evening
+          {% elif now().hour >= 2 and now().hour < 8 %}
+          Night
+          {% else %}
+          Day
+          {% endif %}
+
   - platform: command_line
     name: "CPU Temp"
     command: "cat /sys/class/thermal/thermal_zone0/temp | awk '{print ($1*.001)}'"
@@ -131,12 +148,26 @@ sensor:
       patty_status:
         value_template: '{{ states.device_tracker.galaxys9.state }}'
         friendly_name: 'Patty'
+        
   - platform: octoprint
     name: OctoPrint
     monitored_conditions:
       - Current State
       - Temperatures
       - Job Percentage
+      - Time Elapsed
+      - Time Remaining
+      
+  - platform: template
+    sensors:
+      octoprint_remaining_minutes:
+        friendly_name: "Time Remaining"
+        unit_of_measurement: 'min'
+        value_template: "{{ ( states('sensor.octoprint_time_remaining')|float  / 60) | round(1) }}"
+      octoprint_elapsed_minutes:
+        friendly_name: "Time Elapsed"
+        unit_of_measurement: 'min'
+        value_template: "{{ ( states('sensor.octoprint_time_elapsed') |float  / 60) | round(1) }}"
       
   - platform: transmission
     host: 192.168.1.73
@@ -194,6 +225,15 @@ light:
 # Text to speech
 tts:
   - platform: google
+
+alarm_control_panel:
+  platform: manual
+  name: "Home"
+  code: !secret alarm_code
+  pending_time: 60
+  delay_time: 60
+  disarmed:
+    trigger_time: 0
 
 mqtt:
   broker: ha-pi

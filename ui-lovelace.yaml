@@ -2,6 +2,11 @@ title: My Awesome Home
 # Exclude entities from "Unused entities" view
 excluded_entities:
   - weblink.router
+  
+resources:
+  - url: /local/custom-lovelace/alarm_control_panel-card/alarm_control_panel-card.js?v=2
+    type: js  
+
 views:
     # View tab title.
   - title: Example
@@ -35,18 +40,26 @@ views:
         # Entities card will take a list of entities and show their state.
       - type: entities
         # Title of the entities card
-        title: Example
+        title: Lights
         # The entities here will be shown in the same order as specified.
         # Each entry is an entity ID or a map with extra options.
         entities:
           - switch.sonoff_extension_cord
-          #- switch.ac
           - entity: switch.family_room_light
-            # Override the name to use
             name: Family Room Lights
+            
 
         # The markdown card will render markdown text.
       - type: markdown
         title: Lovelace
         content: >
           Welcome to your **Lovelace UI**.
+          
+      - type: custom:alarm_control_panel-card
+        entity: alarm_control_panel.home
+        show_keypad: true
+        title: My Alarm
+        style: '--alarm-color-disarmed: var(--label-badge-blue);'
+        states:
+          - arm_home
+          - arm_away

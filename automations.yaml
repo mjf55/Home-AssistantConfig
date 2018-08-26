@@ -1,4 +1,5 @@
 - alias: 'Turn on / off lights at 0400'
+  initial_state: False
   trigger:
     platform: time
     at: '04:00'
@@ -40,19 +41,8 @@
     - service: homeassistant.turn_off
       entity_id: switch.family_room_light
 
-- alias: 'Test'
-  trigger:
-    platform: time
-    at: '20:30'
-  action:
-    - service: homeassistant.turn_off
-      entity_id: switch.family_room_light
-    - delay:
-        minutes: 2
-    - service: homeassistant.turn_on
-      entity_id: switch.family_room_light
 
-- alias: 'Turn off extension cord'
+- alias: 'Turn off extension cord at night'
   trigger:
     platform: time
     at: '01:00'
@@ -61,7 +51,8 @@
     - service: homeassistant.turn_off
       entity_id: switch.sonoff_extension_cord
 
-- alias: 'Light on at sunset2'
+- alias: 'Extension cord on at sunset'
+  initial_state: False
   trigger:
     platform: sun
     event: sunset
@@ -71,31 +62,94 @@
     - service: homeassistant.turn_on
       entity_id: switch.sonoff_extension_cord
 
-- alias: Turn on light when there is movement
+
+- alias: 'Hallway Motion Detected'
+  trigger:
+    - platform: state
+      entity_id: sensor.sn1_pir
+      to: 'motion detected'
+  condition:
+    - condition: state
+      entity_id: light.sn1_led
+      state: 'off'
+  action:
+    - service_template: >
+        {%-if is_state('sun.sun', 'below_horizon') -%}
+          homeassistant.turn_on
+        {%- endif -%}
+      data:
+        entity_id: light.sn1_led
+        rgb_color: [255, 255, 255]
+    - service_template: >
+        {% if is_state('sun.sun', 'below_horizon') %}
+          homeassistant.turn_on
+        {% endif %}
+      data:
+        entity_id: switch.family_room_light
+
+- alias: 'Hallway Motion Off'
+  trigger:
+    - platform: state
+      entity_id: sensor.sn1_pir
+      to: 'standby'
+      for:
+        seconds: 30
+  condition:
+    - condition: state
+      entity_id: light.sn1_led
+      state: 'on'
+  action:
+    - delay: '00:10:00'
+    - service_template: >
+        {% if is_state('sun.sun', 'below_horizon') %}
+          homeassistant.turn_off
+        {% endif %}
+      data:
+        entity_id: light.sn1_led
+    - service_template: >
+        {% if is_state('sensor.day_night', 'Night') %}
+          homeassistant.turn_off
+        {% endif %}
+      data:
+        entity_id: switch.family_room_light
+
+# - alias: 'Alarm verbal'
+  # hide_entity: True
+  # trigger:
+    # platform: state
+    # entity_id: alarm_control_panel.home
+    # to: 'pending'
+  # action:
+    # service: tts.google_say
+    # data:
+      # message: 'Arming alarm in 60 seconds'
+        
+- alias: 'Alarm disarm'
+  hide_entity: True
   trigger:
     platform: state
-    entity_id: sensor.sn1_pir
-    to: 'motion detected'
+    entity_id: alarm_control_panel.home
+    to: 'disarmed'
   action:
-    - service: homeassistant.turn_on
-      entity_id: light.sn1_led
-    - service: homeassistant.turn_on
-      entity_id: switch.family_room_light
+    service: homeassistant.turn_off
+    entity_id: input_boolean.alarm_home
 
-- alias: Turn off light when movement stopped
+- alias: 'Alarm arm away'
+  hide_entity: True
   trigger:
     platform: state
-    entity_id: sensor.sn1_pir
-    to: 'standby'
+    entity_id: alarm_control_panel.home
+    to: 'armed_away'
   action:
-    - delay: '00:01:00'
-    - service: homeassistant.turn_off
-      entity_id: light.sn1_led
-    - service: homeassistant.turn_off
-      entity_id: switch.family_room_light
+    service: homeassistant.turn_on
+    entity_id: input_boolean.alarm_home
 
-
-
-
-
-
+- alias: 'Alarm arm home'
+  hide_entity: True
+  trigger:
+    platform: state
+    entity_id: alarm_control_panel.home
+    to: 'armed_home'
+  action:
+    service: homeassistant.turn_on
+    entity_id: input_boolean.alarm_home

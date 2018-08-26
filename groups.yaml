@@ -86,6 +86,8 @@ printer_status:
     - binary_sensor.octoprint_printing_error
     - sensor.octoprint_current_state
     - sensor.octoprint_job_percentage
+    - sensor.octoprint_elapsed_minutes
+    - sensor.octoprint_remaining_minutes
     - sensor.octoprint_actual_bed_temp
     - sensor.octoprint_target_bed_temp
     - sensor.octoprint_actual_tool0_temp

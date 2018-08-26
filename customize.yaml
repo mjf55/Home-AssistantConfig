@@ -24,8 +24,16 @@ sensor.octoprint_current_state:
   friendly_name: Currently
 sensor.octoprint_job_percentage:
   friendly_name: Complete
+  icon: mdi:percent
 sensor.octoprint_target_bed_temp:
   friendly_name: Target Bed Temp
 sensor.octoprint_target_tool0_temp:
   friendly_name: Target Hotend Temp
-
+sensor.octoprint_time_elapsed:
+  hidden: true
+sensor.octoprint_time_remaining:
+  hidden: true
+sensor.octoprint_remaining_minutes:
+  icon: mdi:timer-sand-empty
+sensor.octoprint_elapsed_minutes:
+  icon: mdi:timer-sand-full
